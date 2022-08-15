@@ -15,7 +15,7 @@ import { SidebarMenuItemComponent } from './SidebarMenuItem';
 
 export const SidebarComponent: React.FC = () => {
   return (
-    <div className="hidden sm:flex flex-col p-2 xl:items-start fixed h-full">
+    <div className="hidden sm:flex flex-col p-2 xl:items-start fixed h-full xl:ml-24">
       {/* Twitter Logo */}
       <div className="hover-effects p-0 hover:bg-blue-100 xl:p-1">
         <Image

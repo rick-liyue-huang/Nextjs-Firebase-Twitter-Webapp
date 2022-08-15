@@ -2,8 +2,29 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { FeedComponent } from '../components/Feed';
 import { SidebarComponent } from '../components/Sidebar';
+import { WidgetsCompont } from '../components/Widgets';
 
-const Home: NextPage = () => {
+export interface ArticleProp {
+  source: {
+    id: string | null;
+    name: string;
+  };
+  author: string;
+  title: string;
+  description: string;
+  url: string;
+  urlToImage: string;
+  publishedAt: string;
+  content: string;
+}
+interface Props {
+  newsResults: {
+    status: string;
+    totalResults: number;
+    articles: ArticleProp;
+  };
+}
+const Home: NextPage<Props> = ({ newsResults }) => {
   return (
     <div>
       <Head>
@@ -12,7 +33,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="flex min-h-screen max-w-7xl mx-auto">
+      <main className="flex min-h-screen mx-auto">
         {/* Sidebar */}
         <SidebarComponent />
 
@@ -20,9 +41,27 @@ const Home: NextPage = () => {
         <FeedComponent />
 
         {/* Widgets */}
+        <WidgetsCompont newsResults={newsResults.articles} />
       </main>
     </div>
   );
 };
 
 export default Home;
+
+// https://saurav.tech/NewsAPI/top-headlines/category/business/us.json
+
+export async function getServerSideProps() {
+  const newsResults = await fetch(
+    `https://saurav.tech/NewsAPI/top-headlines/category/business/us.json`
+  ).then((res) => {
+    // console.log(res.json());
+    return res.json();
+  });
+
+  return {
+    props: {
+      newsResults: newsResults,
+    },
+  };
+}
