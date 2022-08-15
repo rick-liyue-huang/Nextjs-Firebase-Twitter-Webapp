@@ -11,9 +11,9 @@ import {
 } from '@heroicons/react/outline';
 import Image from 'next/image';
 import React from 'react';
-import { SidebarMenuItem } from './SidebarMenuItem';
+import { SidebarMenuItemComponent } from './SidebarMenuItem';
 
-export const Sidebar: React.FC = () => {
+export const SidebarComponent: React.FC = () => {
   return (
     <div className="hidden sm:flex flex-col p-2 xl:items-start fixed h-full">
       {/* Twitter Logo */}
@@ -29,14 +29,17 @@ export const Sidebar: React.FC = () => {
 
       {/* Menu */}
       <div className="mt-4 mb-2.5 xl:items-start">
-        <SidebarMenuItem text={'Home'} Icon={HomeIcon} active />
-        <SidebarMenuItem text={'Explore'} Icon={HashtagIcon} />
-        <SidebarMenuItem text={'Notifications'} Icon={BellIcon} />
-        <SidebarMenuItem text={'Messages'} Icon={InboxIcon} />
-        <SidebarMenuItem text={'Bookmarks'} Icon={BookmarkIcon} />
-        <SidebarMenuItem text={'Lists'} Icon={ClipboardIcon} />
-        <SidebarMenuItem text={'Profile'} Icon={UserIcon} />
-        <SidebarMenuItem text={'More'} Icon={DotsCircleHorizontalIcon} />
+        <SidebarMenuItemComponent text={'Home'} Icon={HomeIcon} active />
+        <SidebarMenuItemComponent text={'Explore'} Icon={HashtagIcon} />
+        <SidebarMenuItemComponent text={'Notifications'} Icon={BellIcon} />
+        <SidebarMenuItemComponent text={'Messages'} Icon={InboxIcon} />
+        <SidebarMenuItemComponent text={'Bookmarks'} Icon={BookmarkIcon} />
+        <SidebarMenuItemComponent text={'Lists'} Icon={ClipboardIcon} />
+        <SidebarMenuItemComponent text={'Profile'} Icon={UserIcon} />
+        <SidebarMenuItemComponent
+          text={'More'}
+          Icon={DotsCircleHorizontalIcon}
+        />
       </div>
 
       {/* Buttons */}
