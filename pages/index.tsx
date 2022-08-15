@@ -5,26 +5,48 @@ import { SidebarComponent } from '../components/Sidebar';
 import { WidgetsCompont } from '../components/Widgets';
 
 export interface ArticleProp {
+  title: string;
+  urlToImage: string;
   source: {
     id: string | null;
     name: string;
   };
   author: string;
-  title: string;
   description: string;
   url: string;
-  urlToImage: string;
   publishedAt: string;
   content: string;
 }
+
+export interface UserProps {
+  name: {
+    first: string;
+    last: string;
+    title: string;
+  };
+  login: {
+    username: string;
+  };
+  picture: {
+    large: string;
+    medium: string;
+    thumbnail: string;
+  };
+  email: string;
+}
+
 interface Props {
   newsResults: {
     status: string;
     totalResults: number;
-    articles: ArticleProp;
+    articles: ArticleProp[];
+  };
+  usersResults: {
+    results: UserProps[];
+    info: any;
   };
 }
-const Home: NextPage<Props> = ({ newsResults }) => {
+const Home: NextPage<Props> = ({ newsResults, usersResults }) => {
   return (
     <div>
       <Head>
@@ -41,7 +63,10 @@ const Home: NextPage<Props> = ({ newsResults }) => {
         <FeedComponent />
 
         {/* Widgets */}
-        <WidgetsCompont newsResults={newsResults.articles} />
+        <WidgetsCompont
+          newsResults={newsResults.articles}
+          usersResults={usersResults.results}
+        />
       </main>
     </div>
   );
@@ -50,7 +75,7 @@ const Home: NextPage<Props> = ({ newsResults }) => {
 export default Home;
 
 // https://saurav.tech/NewsAPI/top-headlines/category/business/us.json
-
+// show some random news
 export async function getServerSideProps() {
   const newsResults = await fetch(
     `https://saurav.tech/NewsAPI/top-headlines/category/business/us.json`
@@ -59,9 +84,18 @@ export async function getServerSideProps() {
     return res.json();
   });
 
+  // https://randomuser.me/api/?results=50&inc=name,login,picture,email
+  // who to follow section
+  const randomUsersResults = await fetch(
+    `https://randomuser.me/api/?results=50&inc=name,login,picture,email`
+  ).then((res) => {
+    return res.json();
+  });
+
   return {
     props: {
       newsResults: newsResults,
+      usersResults: randomUsersResults,
     },
   };
 }
