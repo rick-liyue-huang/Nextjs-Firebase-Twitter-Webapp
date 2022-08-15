@@ -5,9 +5,14 @@ export default NextAuth({
   // Configure one or more authentication providers
   providers: [
     GoogeProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string, // must match the firebase google authentication provider and clould google console credentials
+      clientSecret: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET as string, // same as upper case, get from cloud google credentials and past them to firebase google authentication provider
     }),
     // ...add more providers here
   ],
+
+  // custom page for auth direction, here use signIn method to direct to /auth/signin page
+  pages: {
+    signIn: '/auth/signin',
+  },
 });

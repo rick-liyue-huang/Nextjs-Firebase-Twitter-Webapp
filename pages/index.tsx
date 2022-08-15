@@ -1,4 +1,4 @@
-import type { NextPage } from 'next';
+import type { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 import { FeedComponent } from '../components/Feed';
 import { SidebarComponent } from '../components/Sidebar';
@@ -76,7 +76,7 @@ export default Home;
 
 // https://saurav.tech/NewsAPI/top-headlines/category/business/us.json
 // show some random news
-export async function getServerSideProps() {
+export const getServerSideProps: GetServerSideProps = async () => {
   const newsResults = await fetch(
     `https://saurav.tech/NewsAPI/top-headlines/category/business/us.json`
   ).then((res) => {
@@ -98,4 +98,4 @@ export async function getServerSideProps() {
       usersResults: randomUsersResults,
     },
   };
-}
+};
