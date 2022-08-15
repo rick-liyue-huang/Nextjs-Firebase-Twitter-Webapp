@@ -22,7 +22,7 @@ interface Props {
 
 export const PostComponent: React.FC<Props> = ({ post }) => {
   return (
-    <div className="flex p-3 cursor-pointer border-b" border-gray-200>
+    <div className="flex p-3 cursor-pointer border-b border-gray-200">
       {/* user image */}
       <img
         src={post.userImg}
