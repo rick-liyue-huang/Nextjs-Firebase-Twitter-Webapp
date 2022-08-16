@@ -1,5 +1,6 @@
 import { SessionProvider } from 'next-auth/react';
 import { AppProps } from 'next/app';
+import { RecoilRoot } from 'recoil';
 import '../styles/globals.css';
 
 /**
@@ -14,7 +15,9 @@ function MyApp({ Component, pageProps }: AppProps) {
       // you have a short session maxAge time. Shown here with default values.
       session={pageProps.session}
     >
-      <Component {...pageProps} />
+      <RecoilRoot>
+        <Component {...pageProps} />
+      </RecoilRoot>
     </SessionProvider>
   );
 }

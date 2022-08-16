@@ -17,6 +17,8 @@ import { deleteObject, ref } from 'firebase/storage';
 import { signIn, useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import Moment from 'react-moment';
+import { useSetRecoilState } from 'recoil';
+import { commentModalState } from '../atoms/modalAtom';
 import { db, storage } from '../firebase';
 
 interface Props {
@@ -42,6 +44,7 @@ export const PostComponent: React.FC<Props> = ({ post }) => {
   const { data: session } = useSession();
   const [likes, setLikes] = useState([]);
   const [hasLiked, setHasLiked] = useState(false);
+  const setOpen = useSetRecoilState(commentModalState);
 
   // console.log(post.id);
 
@@ -97,8 +100,10 @@ export const PostComponent: React.FC<Props> = ({ post }) => {
       // await deleteDoc(doc(db, 'posts', post.id, 'likes'));
       // delete store post document
       await deleteDoc(doc(db, 'posts', post.id));
-      // delete storage image
-      await deleteObject(ref(storage, `posts/${post.id}/image`));
+      if (post.data().image) {
+        // delete storage image
+        await deleteObject(ref(storage, `posts/${post.id}/image`));
+      }
     }
   };
 
@@ -149,7 +154,10 @@ export const PostComponent: React.FC<Props> = ({ post }) => {
 
         {/* icons */}
         <div className="flex items-center justify-between text-gray-500 p-2">
-          <ChatIcon className="h-9 w-9 hover-effects p-2 hover:text-sky-500 hover:bg-sky-100" />
+          <ChatIcon
+            onClick={() => setOpen(true)}
+            className="h-9 w-9 hover-effects p-2 hover:text-sky-500 hover:bg-sky-100"
+          />
           {
             // @ts-ignore
             session?.user?.uid === post.data().id && (

@@ -1,5 +1,6 @@
 import type { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
+import { CommentModal } from '../components/CommentModal';
 import { FeedComponent } from '../components/Feed';
 import { SidebarComponent } from '../components/Sidebar';
 import { WidgetsCompont } from '../components/Widgets';
@@ -67,6 +68,9 @@ const Home: NextPage<Props> = ({ newsResults, usersResults }) => {
           newsResults={newsResults.articles}
           usersResults={usersResults.results}
         />
+
+        {/* CommentModal */}
+        <CommentModal />
       </main>
     </div>
   );

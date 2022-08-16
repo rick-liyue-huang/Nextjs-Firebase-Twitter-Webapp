@@ -1,4 +1,5 @@
 import { SearchIcon } from '@heroicons/react/outline';
+import { AnimatePresence, motion } from 'framer-motion';
 import React, { useState } from 'react';
 import { ArticleProp, UserProps } from '../pages';
 import { NewsComponent } from './News';
@@ -31,9 +32,21 @@ export const WidgetsCompont: React.FC<Props> = ({
       {/* News */}
       <div className="text-gray-700 space-y-3 bg-gray-100 rounded-xl pt-2 w-[90%] xl:w-[75%]">
         <h4 className="font-bold text-xl px-4">What's happened</h4>
-        {newsResults.slice(0, aritcleNumber).map((article: ArticleProp) => (
-          <NewsComponent key={article.title} article={article} />
-        ))}
+
+        <AnimatePresence>
+          {newsResults.slice(0, aritcleNumber).map((article: ArticleProp) => (
+            <motion.div
+              key={article.title}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              <NewsComponent article={article} />
+            </motion.div>
+          ))}
+        </AnimatePresence>
+
         <button
           className="text-blue-300 pl-4 pb-3 hover:text-blue-400"
           onClick={() => setaritcleNumber(aritcleNumber + 3)}
@@ -45,30 +58,38 @@ export const WidgetsCompont: React.FC<Props> = ({
       {/* following users */}
       <div className="sticky top-20 text-gray-700 space-y-3 bg-gray-100 rounded-xl pt-2 w-[90%] xl:w-[75%]">
         <h4 className="font-bold text-xl px-4">Who to follow</h4>
-        {usersResults.slice(0, followingUsersNumber).map((user) => (
-          <div
-            className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-200 transition duration-200"
-            key={user.email}
-          >
-            <img
-              className="rounded-full"
-              width={'40'}
-              src={user.picture.thumbnail}
-              alt={user.name.first}
-            />
-            <div className="truncate ml-4 leading-5">
-              <h4 className="font-bold hover:underline text-[14px] truncate">
-                {user.login.username}
-              </h4>
-              <h5 className="text-[13px] text-gray-500 truncate">
-                {user.name.first + ' ' + user.name.last}
-              </h5>
-            </div>
-            <button className="ml-auto bg-sky-500 text-white rounded-full px-3 py-1.5">
-              Follow
-            </button>
-          </div>
-        ))}
+        <AnimatePresence>
+          {usersResults.slice(0, followingUsersNumber).map((user) => (
+            <motion.div
+              key={user.email}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              <div className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-200 transition duration-200">
+                <img
+                  className="rounded-full"
+                  width={'40'}
+                  src={user.picture.thumbnail}
+                  alt={user.name.first}
+                />
+                <div className="truncate ml-4 leading-5">
+                  <h4 className="font-bold hover:underline text-[14px] truncate">
+                    {user.login.username}
+                  </h4>
+                  <h5 className="text-[13px] text-gray-500 truncate">
+                    {user.name.first + ' ' + user.name.last}
+                  </h5>
+                </div>
+                <button className="ml-auto bg-sky-500 text-white rounded-full px-3 py-1.5">
+                  Follow
+                </button>
+              </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+
         <button
           className="text-blue-300 pl-4 pb-3 hover:text-blue-400"
           onClick={() => setFollowingUsersNumber(followingUsersNumber + 3)}
