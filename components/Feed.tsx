@@ -1,10 +1,15 @@
 import { SparklesIcon } from '@heroicons/react/outline';
-import React from 'react';
+import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
+import { db } from '../firebase';
 import { InputComponent } from './Input';
 import { PostComponent } from './Post';
 
+interface PostProps {}
+
 export const FeedComponent: React.FC = () => {
-  const posts = [
+  /*
+   const posts = [
     {
       id: '1',
       name: 'post one',
@@ -24,6 +29,19 @@ export const FeedComponent: React.FC = () => {
       timestamp: '3 hours ago',
     },
   ];
+   */
+
+  const [posts, setPosts] = useState<any[]>([]);
+
+  useEffect(() => {
+    return onSnapshot(
+      query(collection(db, 'posts'), orderBy('timestamp', 'desc')),
+      (snapshot: any) => {
+        setPosts(snapshot.docs);
+        console.log('posts: ---', posts);
+      }
+    );
+  }, []);
 
   return (
     <div className="xl:ml-[370px] border-l border-r xl:min-w-[576px] sm:ml-[73px] flex-grow max-w-xl border-gray-200">
@@ -40,7 +58,8 @@ export const FeedComponent: React.FC = () => {
 
       {/* Feed Post */}
       {posts.map((post) => (
-        <PostComponent key={post.id} post={post} />
+        // @ts-ignore
+        <PostComponent key={post.data().text} post={post} />
       ))}
     </div>
   );
