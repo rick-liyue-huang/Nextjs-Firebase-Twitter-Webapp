@@ -13,10 +13,11 @@ import {
   onSnapshot,
   setDoc,
 } from 'firebase/firestore';
+import { deleteObject, ref } from 'firebase/storage';
 import { signIn, useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import Moment from 'react-moment';
-import { db } from '../firebase';
+import { db, storage } from '../firebase';
 
 interface Props {
   post: {
@@ -89,6 +90,18 @@ export const PostComponent: React.FC<Props> = ({ post }) => {
     }
   };
 
+  const handleDeletePost = async () => {
+    if (window.confirm('Are your sure?')) {
+      // delete the post likes collection
+      // @ts-ignore
+      // await deleteDoc(doc(db, 'posts', post.id, 'likes'));
+      // delete store post document
+      await deleteDoc(doc(db, 'posts', post.id));
+      // delete storage image
+      await deleteObject(ref(storage, `posts/${post.id}/image`));
+    }
+  };
+
   return (
     <div className="flex p-3 cursor-pointer border-b border-gray-200">
       {/* user image */}
@@ -137,8 +150,15 @@ export const PostComponent: React.FC<Props> = ({ post }) => {
         {/* icons */}
         <div className="flex items-center justify-between text-gray-500 p-2">
           <ChatIcon className="h-9 w-9 hover-effects p-2 hover:text-sky-500 hover:bg-sky-100" />
-          <TrashIcon className="h-9 w-9 hover-effects p-2 hover:text-red-500 hover:bg-sky-100" />
-
+          {
+            // @ts-ignore
+            session?.user?.uid === post.data().id && (
+              <TrashIcon
+                onClick={handleDeletePost}
+                className="h-9 w-9 hover-effects p-2 hover:text-red-500 hover:bg-sky-100"
+              />
+            )
+          }
           <div className="flex items-center">
             {hasLiked ? (
               <HeartSolidIcon
