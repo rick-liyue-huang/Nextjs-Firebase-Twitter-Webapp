@@ -1,31 +1,46 @@
 import { EmojiHappyIcon, PhotographIcon } from '@heroicons/react/outline';
+import { useSession } from 'next-auth/react';
 import React from 'react';
 
 export const InputComponent: React.FC = () => {
+  // after sign in get the session information
+  const { data: session } = useSession();
+
+  console.log('session: ---', session);
+
+  if (session?.user?.image) {
+    session.user.image =
+      'https://avatars.githubusercontent.com/u/20208332?s=40&v=4';
+  }
+
   return (
-    <div className="flex border-b border-gray-200 p-3 space-x-3">
-      <img
-        src="https://avatars.githubusercontent.com/u/20208332?s=40&v=4"
-        alt="user-img"
-        className="h-11 w-11 rounded-full cursor-pointer hover:brightness-95"
-      />
-      <div className="w-full divide-y divide-gray-200">
-        <div className="">
-          <textarea
-            placeholder="input something..."
-            className="w-full border-none focus:ring-0 text-lg placeholder-gray-700 tracking-wider min-h-[50px] text-gray-700"
-          ></textarea>
-        </div>
-        <div className="flex items-center justify-between pt-2.5">
-          <div className="flex ">
-            <PhotographIcon className="h-10 w-10 hover-effects p-2 text-sky-500 hover:bg-sky-100" />
-            <EmojiHappyIcon className="h-10 w-10 hover-effects p-2 text-sky-500  hover:bg-sky-100" />
+    <>
+      {session && session.user && session.user.image && (
+        <div className="flex border-b border-gray-200 p-3 space-x-3">
+          <img
+            src={session.user.image}
+            alt="user-img"
+            className="h-11 w-11 rounded-full cursor-pointer hover:brightness-95"
+          />
+          <div className="w-full divide-y divide-gray-200">
+            <div className="">
+              <textarea
+                placeholder="input something..."
+                className="w-full border-none focus:ring-0 text-lg placeholder-gray-700 tracking-wider min-h-[50px] text-gray-700"
+              ></textarea>
+            </div>
+            <div className="flex items-center justify-between pt-2.5">
+              <div className="flex ">
+                <PhotographIcon className="h-10 w-10 hover-effects p-2 text-sky-500 hover:bg-sky-100" />
+                <EmojiHappyIcon className="h-10 w-10 hover-effects p-2 text-sky-500  hover:bg-sky-100" />
+              </div>
+              <button className="bg-blue-400 text-white px-4 py-1.5 rounded-full font-bold shadow-md hover:brightness-95 disabled:opacity-50">
+                Tweet
+              </button>
+            </div>
           </div>
-          <button className="bg-blue-400 text-white px-4 py-1.5 rounded-full font-bold shadow-md hover:brightness-95 disabled:opacity-50">
-            Tweet
-          </button>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
