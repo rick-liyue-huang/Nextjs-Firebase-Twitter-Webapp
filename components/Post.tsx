@@ -19,21 +19,24 @@ import React, { useEffect, useState } from 'react';
 import Moment from 'react-moment';
 import { useSetRecoilState } from 'recoil';
 import { commentModalState } from '../atoms/modalAtom';
+import { postIdState } from '../atoms/postIdAtom';
 import { db, storage } from '../firebase';
 
-interface Props {
-  post: {
-    id: string; // key for the posts[key] = value:(data())
-    data: () => {
-      id: string;
-      name: string;
-      username: string;
-      userImage: string;
-      image: string;
-      text: string;
-      timestamp: string;
-    };
+export interface PostProps {
+  id: string; // key for the posts[key] = value:(data())
+  data: () => {
+    id: string;
+    name: string;
+    username: string;
+    userImage: string;
+    image: string;
+    text: string;
+    timestamp: string;
   };
+}
+
+interface Props {
+  post: PostProps;
 }
 
 export const PostComponent: React.FC<Props> = ({ post }) => {
@@ -45,6 +48,7 @@ export const PostComponent: React.FC<Props> = ({ post }) => {
   const [likes, setLikes] = useState([]);
   const [hasLiked, setHasLiked] = useState(false);
   const setOpen = useSetRecoilState(commentModalState);
+  const setPostId = useSetRecoilState(postIdState);
 
   // console.log(post.id);
 
@@ -155,7 +159,14 @@ export const PostComponent: React.FC<Props> = ({ post }) => {
         {/* icons */}
         <div className="flex items-center justify-between text-gray-500 p-2">
           <ChatIcon
-            onClick={() => setOpen(true)}
+            onClick={() => {
+              if (!session) {
+                signIn();
+              } else {
+                setPostId(post.id);
+                setOpen(true);
+              }
+            }}
             className="h-9 w-9 hover-effects p-2 hover:text-sky-500 hover:bg-sky-100"
           />
           {
