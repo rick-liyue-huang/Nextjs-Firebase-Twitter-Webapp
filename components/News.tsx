@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArticleProp } from '../pages';
+import { ArticleProp } from '../types';
 
 interface Props {
   article: ArticleProp;

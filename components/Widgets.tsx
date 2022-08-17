@@ -1,7 +1,7 @@
 import { SearchIcon } from '@heroicons/react/outline';
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { useState } from 'react';
-import { ArticleProp, UserProps } from '../pages';
+import { ArticleProp, UserProps } from '../types';
 import { NewsComponent } from './News';
 
 interface Props {
