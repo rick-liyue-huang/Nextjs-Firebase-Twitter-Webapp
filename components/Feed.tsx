@@ -70,7 +70,6 @@ export const FeedComponent: React.FC = () => {
             <PostComponent id={post.id} post={post} />
           </motion.div>
         ))}
-        // @ts-ignore
       </AnimatePresence>
     </div>
   );
