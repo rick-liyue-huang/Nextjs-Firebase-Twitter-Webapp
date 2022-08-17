@@ -3,8 +3,15 @@ import {
   PhotographIcon,
   XIcon,
 } from '@heroicons/react/outline';
-import { doc, onSnapshot } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  doc,
+  onSnapshot,
+  serverTimestamp,
+} from 'firebase/firestore';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 import React, { useEffect, useRef, useState } from 'react';
 import Modal from 'react-modal';
 import Moment from 'react-moment';
@@ -21,6 +28,9 @@ export const CommentModal: React.FC = () => {
   const { data: session } = useSession();
   const [input, setInput] = useState('');
   const filePickRef = useRef<HTMLInputElement | null>(null);
+  const router = useRouter();
+
+  // console.log('session: --', session);
 
   useEffect(() => {
     const docRef = doc(db, 'posts', postId);
@@ -29,7 +39,21 @@ export const CommentModal: React.FC = () => {
     });
   }, [postId, db]);
 
-  const handleSendComment = () => {};
+  // communicate with firebase
+  const handleSendComment = async () => {
+    await addDoc(collection(db, 'posts', postId, 'comments'), {
+      comment: input,
+      name: session?.user?.name,
+      // @ts-ignore
+      username: session?.user?.username,
+      userImg: session?.user?.image,
+      timestamp: serverTimestamp(),
+    });
+
+    setOpen(false);
+    setInput('');
+    router.push(`/posts/${postId}`);
+  };
 
   return (
     <div>

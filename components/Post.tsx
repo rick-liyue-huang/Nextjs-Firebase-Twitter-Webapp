@@ -49,9 +49,11 @@ export const PostComponent: React.FC<Props> = ({ post }) => {
   const [hasLiked, setHasLiked] = useState(false);
   const setOpen = useSetRecoilState(commentModalState);
   const setPostId = useSetRecoilState(postIdState);
+  const [comments, setComments] = useState([]);
 
   // console.log(post.id);
 
+  // deal with likes sub collection
   useEffect(() => {
     const unsubscribe = onSnapshot(
       collection(db, 'posts', post.id, 'likes'),
@@ -70,6 +72,16 @@ export const PostComponent: React.FC<Props> = ({ post }) => {
       ) !== -1
     );
   }, [likes]);
+
+  // deal with comments sub collection
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      collection(db, 'posts', post.id, 'comments'),
+      (snapshot: any) => {
+        setComments(snapshot.docs);
+      }
+    );
+  }, []);
 
   const handleLikePost = async () => {
     if (session) {
@@ -120,7 +132,7 @@ export const PostComponent: React.FC<Props> = ({ post }) => {
         className="h-11 w-11 rounded-full hover:brightness-95 mr-4"
       />
       {/* right part */}
-      <div className="w-[80%]">
+      <div className="flex-1">
         {/* header */}
         <div className="flex items-center justify-between ">
           {/* user info */}
@@ -158,17 +170,23 @@ export const PostComponent: React.FC<Props> = ({ post }) => {
 
         {/* icons */}
         <div className="flex items-center justify-between text-gray-500 p-2">
-          <ChatIcon
-            onClick={() => {
-              if (!session) {
-                signIn();
-              } else {
-                setPostId(post.id);
-                setOpen(true);
-              }
-            }}
-            className="h-9 w-9 hover-effects p-2 hover:text-sky-500 hover:bg-sky-100"
-          />
+          <div className="flex items-center select-none">
+            <ChatIcon
+              onClick={() => {
+                if (!session) {
+                  signIn();
+                } else {
+                  setPostId(post.id);
+                  setOpen(true);
+                }
+              }}
+              className="h-9 w-9 hover-effects p-2 hover:text-sky-500 hover:bg-sky-100"
+            />
+            {comments.length > 0 && (
+              <span className="text-xs">{comments.length}</span>
+            )}
+          </div>
+
           {
             // @ts-ignore
             session?.user?.uid === post.data().id && (
