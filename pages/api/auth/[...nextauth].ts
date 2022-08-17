@@ -16,6 +16,9 @@ export default NextAuth({
     signIn: '/auth/signin',
   },
 
+  // after deployment, add this for server configuration
+  secret: process.env.SERVER_SECRET,
+
   // callback for modify the return the session information
   callbacks: {
     async session({ session, token }) {
