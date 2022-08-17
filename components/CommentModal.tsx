@@ -19,7 +19,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { commentModalState } from '../atoms/modalAtom';
 import { postIdState } from '../atoms/postIdAtom';
 import { db } from '../firebase';
-import { PostProps } from './Post';
+import { PostProps } from '../types';
 
 export const CommentModal: React.FC = () => {
   const [open, setOpen] = useRecoilState(commentModalState);
