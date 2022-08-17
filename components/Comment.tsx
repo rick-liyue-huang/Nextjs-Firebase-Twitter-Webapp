@@ -75,6 +75,7 @@ export const CommentComponent: React.FC<Props> = ({
             'comments',
             commentId,
             'likes',
+            // @ts-ignore
             session?.user?.uid
           )
         );
