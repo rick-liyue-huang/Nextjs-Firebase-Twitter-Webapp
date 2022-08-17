@@ -13,7 +13,7 @@ import {
   onSnapshot,
   setDoc,
 } from 'firebase/firestore';
-import { signIn, useSession } from 'next-auth/react';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import Moment from 'react-moment';
@@ -119,6 +119,11 @@ export const CommentComponent: React.FC<Props> = ({
         src={comment?.userImg}
         alt="user-img"
         className="h-11 w-11 rounded-full hover:brightness-95 mr-4"
+        onClick={() => {
+          if (window.confirm('Will Sign out?')) {
+            signOut();
+          }
+        }}
       />
       {/* right part */}
       <div className="flex-1">
