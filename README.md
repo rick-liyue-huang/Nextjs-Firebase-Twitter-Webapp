@@ -1,40 +1,19 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## NextJS Firebase TypeScript Twitter WebApp
 
-## Getting Started
+#### Introduction
 
-First, run the development server:
+This application will clone twitter, in which I create the front-end page by TypeScript NextJS, and store the data in Firebase.
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+#### The Technical Details
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. SignIn and SinOut with firebase authentication and Google OAuth authentication.
+2. After SignIn, the user can CRUD with the Firebase Firestore, and store the post image in Firebase Storage.
+3. By updating the Firebase firestore, user can set 'like' for the single post, and add 'comment' on single post.
+4. The whole project is beautified by TailwindCSS, and switch the dark mode by next-themes lib.
+5. In order to make the project more recognisable in compilation process, the project is coding in TypeScript.
+6. Here it also uses some common ReactJS commbined libs, such as framer-motion, react-moment, react-modal.
+7. The project state is managed by RecoilJS.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+#### Deployment
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-
-google oauth client id and secret
-
-1047734593846-1u643tqnd2rom8m2lf5cvd2kijbt6i5b.apps.googleusercontent.com
-
-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
+After deployment to vercel.com, the web app can be view in desktop webpage and mobile page.

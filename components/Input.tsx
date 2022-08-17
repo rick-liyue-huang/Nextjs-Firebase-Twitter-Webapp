@@ -94,7 +94,7 @@ export const InputComponent: React.FC = () => {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="input something..."
-                className="w-full border-none focus:ring-0 text-lg placeholder-gray-700 tracking-wider min-h-[50px] text-gray-700 dark:bg-black"
+                className="w-full border-none focus:ring-0 text-lg placeholder-gray-700 tracking-wider min-h-[50px] text-gray-700 dark:bg-black dark:text-gray-100"
               ></textarea>
             </div>
             {selectedImg && (
