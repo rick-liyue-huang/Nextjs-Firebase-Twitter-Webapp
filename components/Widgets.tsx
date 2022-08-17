@@ -17,20 +17,20 @@ export const WidgetsCompont: React.FC<Props> = ({
   const [followingUsersNumber, setFollowingUsersNumber] = useState(3);
 
   return (
-    <div className="xl:w-[600px] hidden lg:inline ml-8 space-y-5">
-      <div className="w-[90%] xl:w-[75%] sticky top-0 bg-white py-1.5 z-50">
+    <div className="xl:w-[600px] hidden lg:inline ml-8 space-y-5 ">
+      <div className="w-[90%] xl:w-[75%] sticky top-0 bg-white py-1.5 z-50 dark:bg-black">
         <div className="flex items-center p-3 rounded-full relative">
           <SearchIcon className="h-5 z-60 absolute left-5" />
           <input
             type="text"
             placeholder="search twitter"
-            className="pl-11 rounded-full border-gray-700 text-gray-700 focus:shadow-lg focus:bg-white bg-gray-100 w-full"
+            className="pl-11 rounded-full border-gray-700 text-gray-700 focus:shadow-lg focus:bg-white bg-gray-100 w-full dark:bg-black dark:text-gray-100"
           />
         </div>
       </div>
 
       {/* News */}
-      <div className="text-gray-700 space-y-3 bg-gray-100 rounded-xl pt-2 w-[90%] xl:w-[75%]">
+      <div className="text-gray-700 space-y-3 bg-gray-100 rounded-xl pt-2 w-[90%] xl:w-[75%] dark:bg-black ">
         <h4 className="font-bold text-xl px-4">Whats happened</h4>
 
         <AnimatePresence>
@@ -56,7 +56,7 @@ export const WidgetsCompont: React.FC<Props> = ({
       </div>
 
       {/* following users */}
-      <div className="sticky top-20 text-gray-700 space-y-3 bg-gray-100 rounded-xl pt-2 w-[90%] xl:w-[75%]">
+      <div className="sticky top-20 text-gray-700 space-y-3 bg-gray-100 rounded-xl pt-2 w-[90%] xl:w-[75%] dark:bg-black">
         <h4 className="font-bold text-xl px-4">Who to follow</h4>
         <AnimatePresence>
           {usersResults.slice(0, followingUsersNumber).map((user) => (

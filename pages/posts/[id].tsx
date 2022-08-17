@@ -1,4 +1,4 @@
-import { ArrowLeftIcon } from '@heroicons/react/outline';
+import { ArrowLeftIcon, SwitchHorizontalIcon } from '@heroicons/react/outline';
 import {
   collection,
   doc,
@@ -8,6 +8,7 @@ import {
 } from 'firebase/firestore';
 import { AnimatePresence, motion } from 'framer-motion';
 import type { GetServerSideProps, NextPage } from 'next';
+import { useTheme } from 'next-themes';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -25,6 +26,7 @@ const PostPage: NextPage<IndexProps> = ({ newsResults, usersResults }) => {
   const id = router.query.id as string;
   const [post, setPost] = useState<PostProps | null>(null);
   const [comments, setComments] = useState<CommentProps[]>([]);
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     onSnapshot(doc(db, 'posts', id), (snapshot: any) => {
@@ -58,13 +60,19 @@ const PostPage: NextPage<IndexProps> = ({ newsResults, usersResults }) => {
         {/* Post part */}
         <div className="xl:ml-[370px] border-l border-r xl:min-w-[576px] sm:ml-[73px] flex-grow max-w-xl border-gray-200">
           {/* Feed Head */}
-          <div className="flex items-center px-3 py-2 sticky top-0 z-50 bg-white border-b border-gray-300">
+          <div className="flex items-center px-3 py-2 sticky top-0 z-50 bg-white border-b border-gray-300 dark:bg-black">
             <div className="hover-effects" onClick={() => router.push('/')}>
               <ArrowLeftIcon className="h-5" />
             </div>
             <h2 className="text-lg sm:text-xl font-bold cursor-pointer">
               Post
             </h2>
+            <div className="hover-effects flex items-center justify-center px-0 ml-auto w-9 h-9">
+              <SwitchHorizontalIcon
+                className="h-5"
+                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              />
+            </div>
           </div>
           <PostComponent id={id} post={post} />
           {comments.length > 0 && (

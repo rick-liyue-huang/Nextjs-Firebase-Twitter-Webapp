@@ -58,13 +58,13 @@ export const CommentModal: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="">
       {open && (
         <Modal
           ariaHideApp={false}
           isOpen={open}
           onRequestClose={() => setOpen(false)}
-          className="max-w-lg w-[90%] absolute top-24 left-[50%] translate-x-[-50%] bg-white border-2 rounded-xl shadow-md "
+          className="max-w-lg w-[90%] absolute top-24 left-[50%] translate-x-[-50%] bg-white border-2 rounded-xl shadow-md dark:bg-black"
         >
           <div className="p-2">
             <div className="border-b border-gray-200 py-1 px-1">
@@ -95,7 +95,7 @@ export const CommentModal: React.FC = () => {
                 <Moment fromNow>{post?.data()?.timestamp?.toDate()}</Moment>
               </span>
             </div>
-            <p className="text-gray-500 text-[15px] sm:text-[16px] ml-16 mb-2">
+            <p className="text-gray-500 text-[15px] sm:text-[16px] ml-16 mb-2 dark:text-gray-100">
               {post?.data()?.text}
             </p>
 
@@ -112,7 +112,7 @@ export const CommentModal: React.FC = () => {
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     placeholder="tweet your reply"
-                    className="w-full border-none focus:ring-0 text-lg placeholder-gray-400 tracking-wider min-h-[50px] text-gray-700"
+                    className="w-full border-none focus:ring-0 text-lg placeholder-gray-400 tracking-wider min-h-[50px] text-gray-700 dark:bg-black dark:text-gray-100"
                   ></textarea>
                 </div>
 

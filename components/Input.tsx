@@ -82,7 +82,7 @@ export const InputComponent: React.FC = () => {
   return (
     <>
       {session && session.user && session.user.image && (
-        <div className="flex border-b border-gray-200 p-3 space-x-3">
+        <div className="flex border-b border-gray-200 p-3 space-x-3 dark:bg-black">
           <img
             src={session.user.image}
             alt="user-img"
@@ -94,7 +94,7 @@ export const InputComponent: React.FC = () => {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="input something..."
-                className="w-full border-none focus:ring-0 text-lg placeholder-gray-700 tracking-wider min-h-[50px] text-gray-700"
+                className="w-full border-none focus:ring-0 text-lg placeholder-gray-700 tracking-wider min-h-[50px] text-gray-700 dark:bg-black"
               ></textarea>
             </div>
             {selectedImg && (

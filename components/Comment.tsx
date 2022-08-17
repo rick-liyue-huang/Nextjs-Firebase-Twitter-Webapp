@@ -144,7 +144,7 @@ export const CommentComponent: React.FC<Props> = ({
 
         {/* post text */}
         <p
-          className="text-gray-800 text-[15px] sm:text-[16px] mb-2"
+          className="text-gray-800 text-[15px] sm:text-[16px] mb-2 dark:text-gray-100"
           onClick={() => router.push(`/posts/${passedPostId}`)}
         >
           {comment?.comment}

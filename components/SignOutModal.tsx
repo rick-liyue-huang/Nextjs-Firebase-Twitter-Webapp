@@ -14,7 +14,7 @@ export const SignOutModal: React.FC = () => {
         ariaHideApp={false}
         isOpen={open}
         onRequestClose={() => setOpen(false)}
-        className="absolute bottom-10 left-10 w-[20%] h-[12%] bg-gray-50 rounded-xl"
+        className="absolute bottom-10 left-10 w-[20%] h-[12%] bg-gray-50 rounded-xl dark:bg-black"
       >
         {session && (
           <div className="border-none px-3 py-1 flex flex-col items-center justify-center">
