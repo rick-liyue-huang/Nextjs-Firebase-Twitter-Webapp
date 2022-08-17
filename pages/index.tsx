@@ -4,39 +4,9 @@ import { CommentModal } from '../components/CommentModal';
 import { FeedComponent } from '../components/Feed';
 import { SidebarComponent } from '../components/Sidebar';
 import { WidgetsCompont } from '../components/Widgets';
+import { ArticleProp, UserProps } from '../types';
 
-export interface ArticleProp {
-  title: string;
-  urlToImage: string;
-  source: {
-    id: string | null;
-    name: string;
-  };
-  author: string;
-  description: string;
-  url: string;
-  publishedAt: string;
-  content: string;
-}
-
-export interface UserProps {
-  name: {
-    first: string;
-    last: string;
-    title: string;
-  };
-  login: {
-    username: string;
-  };
-  picture: {
-    large: string;
-    medium: string;
-    thumbnail: string;
-  };
-  email: string;
-}
-
-interface Props {
+export interface IndexProps {
   newsResults: {
     status: string;
     totalResults: number;
@@ -47,7 +17,7 @@ interface Props {
     info: any;
   };
 }
-const Home: NextPage<Props> = ({ newsResults, usersResults }) => {
+const Home: NextPage<IndexProps> = ({ newsResults, usersResults }) => {
   return (
     <div>
       <Head>

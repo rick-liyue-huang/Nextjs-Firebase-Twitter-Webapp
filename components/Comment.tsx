@@ -13,7 +13,6 @@ import {
   onSnapshot,
   setDoc,
 } from 'firebase/firestore';
-import { deleteObject, ref } from 'firebase/storage';
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -21,25 +20,25 @@ import Moment from 'react-moment';
 import { useSetRecoilState } from 'recoil';
 import { commentModalState } from '../atoms/modalAtom';
 import { postIdState } from '../atoms/postIdAtom';
-import { db, storage } from '../firebase';
-import { PostProps } from '../types';
+import { db } from '../firebase';
+import { CommentReturnType } from '../types';
 
 interface Props {
-  id: string;
-  post: PostProps | null;
+  passedPostId: string;
+  commentId: string;
+  comment: CommentReturnType;
 }
 
-export const PostComponent: React.FC<Props> = ({ id, post }) => {
-  // if (post?.data()?.userImage) {
-  //   post.data().userImage =
-  //     'https://avatars.githubusercontent.com/u/20208332?s=40&v=4';
-  // }
+export const CommentComponent: React.FC<Props> = ({
+  passedPostId,
+  commentId,
+  comment,
+}) => {
   const { data: session } = useSession();
   const [likes, setLikes] = useState([]);
   const [hasLiked, setHasLiked] = useState(false);
   const setOpen = useSetRecoilState(commentModalState);
   const setPostId = useSetRecoilState(postIdState);
-  const [comments, setComments] = useState([]);
   const router = useRouter();
 
   // console.log(post.id);
@@ -47,12 +46,12 @@ export const PostComponent: React.FC<Props> = ({ id, post }) => {
   // deal with likes sub collection
   useEffect(() => {
     const unsubscribe = onSnapshot(
-      collection(db, 'posts', id, 'likes'),
+      collection(db, 'posts', passedPostId, 'comments', commentId, 'likes'),
       (snapshot: any) => {
         setLikes(snapshot.docs);
       }
     );
-  }, [db]);
+  }, [db, passedPostId]);
 
   useEffect(() => {
     setHasLiked(
@@ -64,27 +63,29 @@ export const PostComponent: React.FC<Props> = ({ id, post }) => {
     );
   }, [likes]);
 
-  // deal with comments sub collection
-  useEffect(() => {
-    const unsubscribe = onSnapshot(
-      collection(db, 'posts', id, 'comments'),
-      (snapshot: any) => {
-        setComments(snapshot.docs);
-      }
-    );
-  }, []);
-
-  const handleLikePost = async () => {
+  const handleLikeComment = async () => {
     if (session) {
       if (hasLiked) {
         // @ts-ignore
-        await deleteDoc(doc(db, 'posts', post.id, 'likes', session?.user?.uid));
+        await deleteDoc(
+          doc(
+            db,
+            'posts',
+            passedPostId,
+            'comments',
+            commentId,
+            'likes',
+            session?.user?.uid
+          )
+        );
       } else {
         await setDoc(
           doc(
             db,
             'posts',
-            id,
+            passedPostId,
+            'comments',
+            commentId,
             'likes',
             // @ts-ignore
             session?.user?.uid
@@ -100,18 +101,13 @@ export const PostComponent: React.FC<Props> = ({ id, post }) => {
     }
   };
 
-  const handleDeletePost = async () => {
+  const handleDeleteComment = async () => {
     if (window.confirm('Are your sure?')) {
       // delete the post likes collection
       // @ts-ignore
       // await deleteDoc(doc(db, 'posts', post.id, 'likes'));
       // delete store post document
-      await deleteDoc(doc(db, 'posts', post.id));
-      if (post?.data()?.image) {
-        // delete storage image
-        await deleteObject(ref(storage, `posts/${id}/image`));
-      }
-      router.push('/');
+      await deleteDoc(doc(db, 'posts', passedPostId, 'comments', commentId));
     }
   };
 
@@ -119,7 +115,7 @@ export const PostComponent: React.FC<Props> = ({ id, post }) => {
     <div className="flex p-3 cursor-pointer border-b border-gray-200">
       {/* user image */}
       <img
-        src={post?.data()?.userImage}
+        src={comment?.userImg}
         alt="user-img"
         className="h-11 w-11 rounded-full hover:brightness-95 mr-4"
       />
@@ -130,15 +126,15 @@ export const PostComponent: React.FC<Props> = ({ id, post }) => {
           {/* user info */}
           <div className="flex items-center selection:space-x-1 whitespace-nowrap">
             <h4 className="font-bold text-[15px] sm:text-[16px] hover:underline">
-              {post?.data()?.name}
+              {comment?.name}
             </h4>
             <span className="text-sm sm:text-[15px]">
-              @{post?.data()?.username} {'  '}
+              @{comment?.username} {'  '}
             </span>
             {' - '}
             <span className="text-sm sm:text-[15px] hover:underline">
               {/* @ts-ignore */}
-              <Moment fromNow>{post?.data()?.timestamp?.toDate()}</Moment>
+              <Moment fromNow>{comment?.timestamp?.toDate()}</Moment>
             </span>
           </div>
           {/* dot icont */}
@@ -148,21 +144,10 @@ export const PostComponent: React.FC<Props> = ({ id, post }) => {
         {/* post text */}
         <p
           className="text-gray-800 text-[15px] sm:text-[16px] mb-2"
-          onClick={() => router.push(`/posts/${id}`)}
+          onClick={() => router.push(`/posts/${passedPostId}`)}
         >
-          {post?.data()?.text}
+          {comment?.comment}
         </p>
-        {/* post image */}
-        <>
-          {post?.data()?.image && (
-            <img
-              onClick={() => router.push(`/posts/${id}`)}
-              src={post.data()?.image}
-              alt="post-img"
-              className="rounded-2xl mr-2"
-            />
-          )}
-        </>
 
         {/* icons */}
         <div className="flex items-center justify-between text-gray-500 p-2">
@@ -172,22 +157,19 @@ export const PostComponent: React.FC<Props> = ({ id, post }) => {
                 if (!session) {
                   signIn();
                 } else {
-                  setPostId(id);
+                  setPostId(passedPostId);
                   setOpen(true);
                 }
               }}
               className="h-9 w-9 hover-effects p-2 hover:text-sky-500 hover:bg-sky-100"
             />
-            {comments.length > 0 && (
-              <span className="text-xs">{comments.length}</span>
-            )}
           </div>
 
           {
             // @ts-ignore
-            session?.user?.uid === post?.data()?.id && (
+            session?.user?.uid === comment?.userId && (
               <TrashIcon
-                onClick={handleDeletePost}
+                onClick={handleDeleteComment}
                 className="h-9 w-9 hover-effects p-2 hover:text-red-500 hover:bg-sky-100"
               />
             )
@@ -195,12 +177,12 @@ export const PostComponent: React.FC<Props> = ({ id, post }) => {
           <div className="flex items-center">
             {hasLiked ? (
               <HeartSolidIcon
-                onClick={handleLikePost}
+                onClick={handleLikeComment}
                 className="h-9 w-9 hover-effects p-2 hover:text-red-500 hover:bg-sky-100"
               />
             ) : (
               <HeartIcon
-                onClick={handleLikePost}
+                onClick={handleLikeComment}
                 className="h-9 w-9 hover-effects p-2 hover:text-red-500 hover:bg-sky-100"
               />
             )}

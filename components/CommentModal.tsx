@@ -48,6 +48,8 @@ export const CommentModal: React.FC = () => {
       username: session?.user?.username,
       userImg: session?.user?.image,
       timestamp: serverTimestamp(),
+      // @ts-ignore
+      userId: session?.user?.uid,
     });
 
     setOpen(false);

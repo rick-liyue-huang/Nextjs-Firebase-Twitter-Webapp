@@ -1,67 +1,45 @@
 import { ArrowLeftIcon } from '@heroicons/react/outline';
-import { doc, onSnapshot } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+} from 'firebase/firestore';
 import type { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { CommentComponent } from '../../components/Comment';
 import { CommentModal } from '../../components/CommentModal';
-import { PostComponent, PostProps } from '../../components/Post';
+import { PostComponent } from '../../components/Post';
 import { SidebarComponent } from '../../components/Sidebar';
 import { WidgetsCompont } from '../../components/Widgets';
 import { db } from '../../firebase';
+import { CommentProps, PostProps } from '../../types';
+import { IndexProps } from '../index';
 
-export interface ArticleProp {
-  title: string;
-  urlToImage: string;
-  source: {
-    id: string | null;
-    name: string;
-  };
-  author: string;
-  description: string;
-  url: string;
-  publishedAt: string;
-  content: string;
-}
-
-export interface UserProps {
-  name: {
-    first: string;
-    last: string;
-    title: string;
-  };
-  login: {
-    username: string;
-  };
-  picture: {
-    large: string;
-    medium: string;
-    thumbnail: string;
-  };
-  email: string;
-}
-
-interface Props {
-  newsResults: {
-    status: string;
-    totalResults: number;
-    articles: ArticleProp[];
-  };
-  usersResults: {
-    results: UserProps[];
-    info: any;
-  };
-}
-
-const PostPage: NextPage<Props> = ({ newsResults, usersResults }) => {
+const PostPage: NextPage<IndexProps> = ({ newsResults, usersResults }) => {
   const router = useRouter();
   const id = router.query.id as string;
   const [post, setPost] = useState<PostProps | null>(null);
+  const [comments, setComments] = useState<CommentProps[]>([]);
 
   useEffect(() => {
     onSnapshot(doc(db, 'posts', id), (snapshot: any) => {
       setPost(snapshot);
     });
+  }, [db, id]);
+
+  // get comments
+  useEffect(() => {
+    onSnapshot(
+      query(
+        collection(db, 'posts', id, 'comments'),
+        orderBy('timestamp', 'desc')
+      ),
+      (snapshot: any) => setComments(snapshot.docs)
+    );
   }, [db, id]);
 
   return (
@@ -88,6 +66,18 @@ const PostPage: NextPage<Props> = ({ newsResults, usersResults }) => {
             </h2>
           </div>
           <PostComponent id={id} post={post} />
+          {comments.length > 0 && (
+            <>
+              {comments.map((comment) => (
+                <CommentComponent
+                  key={comment.id}
+                  commentId={comment.id}
+                  comment={comment?.data()}
+                  passedPostId={id}
+                />
+              ))}
+            </>
+          )}
         </div>
 
         {/* Widgets */}
