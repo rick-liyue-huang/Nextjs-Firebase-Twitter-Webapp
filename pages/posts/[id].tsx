@@ -6,6 +6,7 @@ import {
   orderBy,
   query,
 } from 'firebase/firestore';
+import { AnimatePresence, motion } from 'framer-motion';
 import type { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -68,14 +69,23 @@ const PostPage: NextPage<IndexProps> = ({ newsResults, usersResults }) => {
           <PostComponent id={id} post={post} />
           {comments.length > 0 && (
             <>
-              {comments.map((comment) => (
-                <CommentComponent
-                  key={comment.id}
-                  commentId={comment.id}
-                  comment={comment?.data()}
-                  passedPostId={id}
-                />
-              ))}
+              <AnimatePresence>
+                {comments.map((comment) => (
+                  <motion.div
+                    key={comment.id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.6 }}
+                  >
+                    <CommentComponent
+                      commentId={comment.id}
+                      comment={comment?.data()}
+                      passedPostId={id}
+                    />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
             </>
           )}
         </div>

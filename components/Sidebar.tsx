@@ -9,13 +9,17 @@ import {
   InboxIcon,
   UserIcon,
 } from '@heroicons/react/outline';
-import { signIn, signOut, useSession } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import React from 'react';
+import { useRecoilState } from 'recoil';
+import { signOutState } from '../atoms/signOutAtom';
 import { SidebarMenuItemComponent } from './SidebarMenuItem';
+import { SignOutModal } from './SignOutModal';
 
 export const SidebarComponent: React.FC = () => {
   const { data: session } = useSession();
+  const [open, setOpen] = useRecoilState(signOutState);
 
   if (session?.user?.image) {
     session.user.image =
@@ -67,7 +71,8 @@ export const SidebarComponent: React.FC = () => {
               src={session?.user?.image as string}
               alt="user-image"
               className="h-10 w-10 rounded-full xl:mr-2"
-              onClick={() => signOut()}
+              // onClick={() => signOut()}
+              onClick={() => setOpen(!open)}
             />
             <div className="leading-5 hidden xl:inline">
               <h4 className="font-bold">{session?.user?.name}</h4>
@@ -87,6 +92,7 @@ export const SidebarComponent: React.FC = () => {
           Sign In
         </button>
       )}
+      <SignOutModal />
     </div>
   );
 };
