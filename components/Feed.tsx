@@ -67,7 +67,7 @@ export const FeedComponent: React.FC = () => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <PostComponent post={post} />
+            <PostComponent id={post.id} post={post} />
           </motion.div>
         ))}
         // @ts-ignore

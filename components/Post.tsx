@@ -15,6 +15,7 @@ import {
 } from 'firebase/firestore';
 import { deleteObject, ref } from 'firebase/storage';
 import { signIn, useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import Moment from 'react-moment';
 import { useSetRecoilState } from 'recoil';
@@ -36,10 +37,11 @@ export interface PostProps {
 }
 
 interface Props {
-  post: PostProps;
+  id: string;
+  post: PostProps | null;
 }
 
-export const PostComponent: React.FC<Props> = ({ post }) => {
+export const PostComponent: React.FC<Props> = ({ id, post }) => {
   // if (post?.data()?.userImage) {
   //   post.data().userImage =
   //     'https://avatars.githubusercontent.com/u/20208332?s=40&v=4';
@@ -50,13 +52,14 @@ export const PostComponent: React.FC<Props> = ({ post }) => {
   const setOpen = useSetRecoilState(commentModalState);
   const setPostId = useSetRecoilState(postIdState);
   const [comments, setComments] = useState([]);
+  const router = useRouter();
 
   // console.log(post.id);
 
   // deal with likes sub collection
   useEffect(() => {
     const unsubscribe = onSnapshot(
-      collection(db, 'posts', post.id, 'likes'),
+      collection(db, 'posts', id, 'likes'),
       (snapshot: any) => {
         setLikes(snapshot.docs);
       }
@@ -76,7 +79,7 @@ export const PostComponent: React.FC<Props> = ({ post }) => {
   // deal with comments sub collection
   useEffect(() => {
     const unsubscribe = onSnapshot(
-      collection(db, 'posts', post.id, 'comments'),
+      collection(db, 'posts', id, 'comments'),
       (snapshot: any) => {
         setComments(snapshot.docs);
       }
@@ -93,7 +96,7 @@ export const PostComponent: React.FC<Props> = ({ post }) => {
           doc(
             db,
             'posts',
-            post.id,
+            id,
             'likes',
             // @ts-ignore
             session?.user?.uid
@@ -116,10 +119,11 @@ export const PostComponent: React.FC<Props> = ({ post }) => {
       // await deleteDoc(doc(db, 'posts', post.id, 'likes'));
       // delete store post document
       await deleteDoc(doc(db, 'posts', post.id));
-      if (post.data().image) {
+      if (post?.data()?.image) {
         // delete storage image
-        await deleteObject(ref(storage, `posts/${post.id}/image`));
+        await deleteObject(ref(storage, `posts/${id}/image`));
       }
+      router.push('/');
     }
   };
 
@@ -127,7 +131,7 @@ export const PostComponent: React.FC<Props> = ({ post }) => {
     <div className="flex p-3 cursor-pointer border-b border-gray-200">
       {/* user image */}
       <img
-        src={post.data().userImage}
+        src={post?.data()?.userImage}
         alt="user-img"
         className="h-11 w-11 rounded-full hover:brightness-95 mr-4"
       />
@@ -138,15 +142,15 @@ export const PostComponent: React.FC<Props> = ({ post }) => {
           {/* user info */}
           <div className="flex items-center selection:space-x-1 whitespace-nowrap">
             <h4 className="font-bold text-[15px] sm:text-[16px] hover:underline">
-              {post.data().name}
+              {post?.data()?.name}
             </h4>
             <span className="text-sm sm:text-[15px]">
-              @{post.data().username} {'  '}
+              @{post?.data()?.username} {'  '}
             </span>
             {' - '}
             <span className="text-sm sm:text-[15px] hover:underline">
               {/* @ts-ignore */}
-              <Moment fromNow>{post.data().timestamp?.toDate()}</Moment>
+              <Moment fromNow>{post?.data()?.timestamp?.toDate()}</Moment>
             </span>
           </div>
           {/* dot icont */}
@@ -155,13 +159,13 @@ export const PostComponent: React.FC<Props> = ({ post }) => {
 
         {/* post text */}
         <p className="text-gray-800 text-[15px] sm:text-[16px] mb-2">
-          {post.data().text}
+          {post?.data()?.text}
         </p>
         {/* post image */}
         <>
-          {post.data().image && (
+          {post?.data()?.image && (
             <img
-              src={post.data().image}
+              src={post.data()?.image}
               alt="post-img"
               className="rounded-2xl mr-2"
             />
@@ -176,7 +180,7 @@ export const PostComponent: React.FC<Props> = ({ post }) => {
                 if (!session) {
                   signIn();
                 } else {
-                  setPostId(post.id);
+                  setPostId(id);
                   setOpen(true);
                 }
               }}
@@ -189,7 +193,7 @@ export const PostComponent: React.FC<Props> = ({ post }) => {
 
           {
             // @ts-ignore
-            session?.user?.uid === post.data().id && (
+            session?.user?.uid === post?.data()?.id && (
               <TrashIcon
                 onClick={handleDeletePost}
                 className="h-9 w-9 hover-effects p-2 hover:text-red-500 hover:bg-sky-100"

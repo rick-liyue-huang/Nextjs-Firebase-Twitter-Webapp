@@ -59,6 +59,7 @@ export const CommentModal: React.FC = () => {
     <div>
       {open && (
         <Modal
+          ariaHideApp={false}
           isOpen={open}
           onRequestClose={() => setOpen(false)}
           className="max-w-lg w-[90%] absolute top-24 left-[50%] translate-x-[-50%] bg-white border-2 rounded-xl shadow-md "
